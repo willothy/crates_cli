@@ -5,8 +5,14 @@ edition = "2021"
 authors = ["Will Hopkins <willothyh@gmail.com>"]
 description = "A command line interface for finding and managing crates."
 
+[[bin]]
+name = "cargo-crates"
+path = "src/main.rs"
+
 [dependencies]
 clap = { version = "3.1.18", features = ["cargo", "wrap_help", "env"] }
+comfy-table = "6.0.0"
+crates-index = "0.18.8"
 crates_io_api = "0.8.0"
 spinners = "4.0.0"
 termion = "1.5.6"

@@ -1,10 +1,11 @@
 use std::error::Error;
 
-use clap::{self, arg, Command};
+use clap::{self, arg, Command, crate_authors, crate_version};
 
 pub fn setup<'a>() -> Command<'a> {
-    Command::new("crates_cli")
-        .propagate_version(true)
+    let crates = Command::new("crates")
+        .version(crate_version!())
+        .author(crate_authors!(",\n"))
         .subcommand_required(true)
         .arg_required_else_help(true)
         .subcommands(vec![Command::new("find")
@@ -21,7 +22,7 @@ pub fn setup<'a>() -> Command<'a> {
                     .required(false)
                     .display_order(1)
                     .help("The maximum number of results to display, max. 50.")
-                    .default_value("5")
+                    .default_value("4")
                     .validator(|v| match v.parse::<u64>() {
                         Ok(v) => {
                             if v <= 50 {
@@ -44,9 +45,29 @@ pub fn setup<'a>() -> Command<'a> {
                         "newly-added",
                         "recent-downloads",
                         "recently-updated",
+                        "alphabetical",
                     ])
-                    .default_value("relevance"),
-            )])
+                    .default_value("recent-downloads"),
+            )
+            .arg(
+                arg!(-f --filter)
+                    .required(false)
+                    .display_order(3)
+                    .help("Filter out crates whose titles don't contain the search term."),
+            )
+            .arg(
+                arg!(-a --all)
+                    .required(false)
+                    .display_order(3)
+                    .help("Show all results.")
+                    .conflicts_with("max_results"),
+            )
+        ]);
+    Command::new("cargo")
+    .propagate_version(true)
+    .subcommand_required(true)
+    .arg_required_else_help(true)
+    .subcommand(crates)
 }
 
 pub trait CliExecute<'a> {
@@ -55,17 +76,26 @@ pub trait CliExecute<'a> {
 
 impl<'a> CliExecute<'a> for Command<'a> {
     fn execute(self) -> Result<(), Box<dyn Error>> {
-        match self.get_matches().subcommand() {
+        let command = match self.get_matches().subcommand() {
+            Some(("crates", subcommand)) => subcommand.clone(),
+            _ => return Err("Unknown command".into()),
+        };
+        match command.subcommand() {
             Some(("find", args)) => crate::commands::search(
                 args.value_of("name").unwrap(),
                 args.value_of("sort").unwrap(),
-                Some(args.value_of_t::<u64>("max_results")?),
+                if args.is_present("all") {
+                    None
+                } else {
+                    Some(args.value_of_t::<usize>("max_results").unwrap_or(3))
+                },
+                args.is_present("filter"),
             ),
-            Some((_, _)) => {
-                panic!(); // TODO: Handle invalid input
+            Some((unknown_cmd, _)) => {
+                Err(format!("Unknown command: {}", unknown_cmd).into())
             }
             None => {
-                panic!(); // TODO: Handle no input
+                Err(format!("No command specified.").into())
             }
         }
     }
