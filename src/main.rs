@@ -8,7 +8,7 @@ mod util;
 
 fn main() -> ExitCode {
     let app = cli::setup()
-        .bin_name("cargo")
+        .bin_name("crates_cli")
         .version(crate_version!())
         .author(crate_authors!(",\n"))
         .about(crate_description!())

@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::util::error::NotPoison;
-use crate::util::{loader, crates};
+use crate::util::{crates, loader};
 use crate::util::{table, terminal::RESET};
 
 fn get_sort_type(sort: &str) -> Sort {

@@ -11,16 +11,18 @@ pub fn show(name: &str) -> Result<(), Box<dyn std::error::Error>> {
             Ok(result) => result,
             Err(e) => return Err(e.to_string()),
         };
-        println!("{}", search_name);
         Ok(found_crate)
     });
 
-    let found_crate = loader::load_until_join(handle, format!("Searching for {}", name))?;
+    let found_crate = match loader::load_until_join(handle, format!("Searching for {}", name)) {
+        Ok(found_crate) => found_crate,
+        Err(_) => return Err(format!("\nSorry, couldn't find crate {} :(", name).into()),
+    };
 
     let mut table = table::setup();
     table.set_header(table::header(&[
         &found_crate.crate_data.name,
-        &found_crate.crate_data.max_version,
+        &("Version ".to_owned() + &found_crate.crate_data.max_version),
     ]));
 
     table.add_row(table::row(&[

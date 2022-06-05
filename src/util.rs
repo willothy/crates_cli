@@ -15,7 +15,10 @@ pub mod crates {
 }
 
 pub mod error {
-    use std::{sync::{MutexGuard, LockResult}, error::Error};
+    use std::{
+        error::Error,
+        sync::{LockResult, MutexGuard},
+    };
 
     pub trait NotPoison<'a, T> {
         fn not_poison(self) -> Result<MutexGuard<'a, Vec<T>>, Box<dyn Error>>;

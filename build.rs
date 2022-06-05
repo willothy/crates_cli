@@ -1,8 +1,6 @@
-use std::{env, error::Error};
+use clap::*;
 
-use clap::{self, arg, crate_authors, crate_version, Command};
-
-pub fn setup<'a>() -> Command<'a> {
+fn main() -> std::io::Result<()> {
     let crates = Command::new("crate")
         .bin_name("")
         .version(crate_version!())
@@ -78,40 +76,18 @@ pub fn setup<'a>() -> Command<'a> {
                         .help("The name of the crate to show."),
                 ),
         ]);
-    Command::new("cargo")
+    let cmd = Command::new("cargo")
         .propagate_version(true)
         .subcommand_required(true)
         .arg_required_else_help(true)
-        .subcommand(crates)
-}
+        .subcommand(crates);
 
-pub trait CliExecute<'a> {
-    fn execute(self) -> Result<(), Box<dyn Error>>;
-}
+    let man = clap_mangen::Man::new(cmd);
+    let mut buffer: Vec<u8> = Default::default();
+    man.render(&mut buffer)?;
 
-impl<'a> CliExecute<'a> for Command<'a> {
-    fn execute(self) -> Result<(), Box<dyn Error>> {
-        let command = match self.get_matches().subcommand() {
-            Some(("crate", subcommand)) => subcommand.clone(),
-            _ => return Err("Expected 'crates'".into()),
-        };
-        match command.subcommand() {
-            Some(("find", args)) => crate::commands::find(
-                args.value_of("name").unwrap(),
-                args.value_of("sort").unwrap(),
-                if args.is_present("all") {
-                    None
-                } else {
-                    Some(args.value_of_t::<usize>("max_results").unwrap_or(3))
-                },
-                args.is_present("filter"),
-            ),
-            Some(("show", args)) => crate::commands::show(match args.value_of("name") {
-                Some(name) => name,
-                None => return Err("No name given".into()),
-            }),
-            Some((unknown_cmd, _)) => Err(format!("Unknown command: {}", unknown_cmd).into()),
-            None => Err("No command specified.".into()),
-        }
-    }
+    let out_dir = std::path::PathBuf::from(std::env::current_dir()?);
+    std::fs::write(out_dir.join("mybin.man"), buffer)?;
+
+    Ok(())
 }
