@@ -1,15 +1,23 @@
-use std::error::Error;
+use clap::*;
 use cli::CliExecute;
+use std::process::ExitCode;
 
-mod util;
 mod cli;
 mod commands;
+mod util;
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let app =cli::setup()
-        .version(env!("CARGO_PKG_VERSION"))
-        .author("Will Hopkins <willothyh@gmail.com>")
-        .about("A command-line utility for finding crates on crates.io.");
+fn main() -> ExitCode {
+    let app = cli::setup()
+        .version(crate_version!())
+        .author(crate_authors!(",\n"))
+        .about(crate_description!())
+        .name(crate_name!());
 
-    app.execute()
+    match app.execute() {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("{}", e);
+            ExitCode::FAILURE
+        }
+    }
 }
