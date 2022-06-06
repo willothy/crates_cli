@@ -6,6 +6,8 @@ A command line interface for finding and managing Rust crates.
 
 Heavily inspired by cargo-edit.
 
+Check the `Usage` page in the [wiki](https://github.com/willothy/crates_cli/wiki) for more info on how to use `crates_cli`.
+
 ### Features:
 - `find` searches crates.io for a crate
 - `show` displays information about a crate, including homepage and documentation links.
