@@ -6,6 +6,17 @@ use std::{error::Error, io::Write};
 #[path = "src/cli/setup.rs"]
 mod cli;
 
+#[derive(Debug)]
+struct BuildError;
+
+impl std::fmt::Display for BuildError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "Build error")
+    }
+}
+
+impl std::error::Error for BuildError {}
+
 fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     use std::path::PathBuf;
     let write = parent.is_some();
@@ -30,10 +41,6 @@ fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
         fs::write(
             &out_file,
             encoder.finish()?,
-        )?;
-        fs::copy(
-            out_file,
-            PathBuf::from("/usr/share/man/man1/").join(out_file
         )?;
     }
 
