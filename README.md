@@ -10,26 +10,6 @@ Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in t
 - `find` searches crates.io for a crate
 - `show` displays information about a crate, including homepage and documentation links.
 
-#### Show
-`cargo crate show <name>`<br><br>
-
-#### Find
-`cargo crate find [OPTIONS] <name>`
-###### Options
-`-f, --filter`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Only show packages whose names include the search term.
-
-`-a, --all`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Show all query results.
-
-`-s, --sort`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Query sort method - defaults to sorting by recent downloads.
-
-`-m, --max_results <max_results>`&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Set the maximum results to show. Default 3.
-
-`--max_results` and `--all` are mutually exclusive. They are executed before `--filter`. This allows chaining of options, so `cargo crate find -af serde` will show all results of the query for `serde`, and `cargo crate find -fm 3 serde` will only show the first 3 results.
-
 ### Planned features:
 - `add`, `rm`, and `version` for managing dependencies
 - `feature` and related subcommands for managing features of dependencies
