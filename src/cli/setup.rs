@@ -88,8 +88,8 @@ pub fn setup<'a>() -> Command<'a> {
         // I added it so that it'll show on the manpage if cargo-crates is run as as a freestanding binary and not a subcommand of cargo.
         .arg(
             arg!(--list)
-            .required(false)
-            .help("List all cargo subcommands"),
+                .required(false)
+                .help("List all cargo subcommands"),
         )
         .subcommand(crates)
 }

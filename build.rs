@@ -1,6 +1,7 @@
 use clap::*;
 use std::error::Error;
-#[path = "src/cli/setup.rs"] mod cli;
+#[path = "src/cli/setup.rs"]
+mod cli;
 
 fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     let write = parent.is_some();

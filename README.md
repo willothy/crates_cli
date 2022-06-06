@@ -1,4 +1,7 @@
 # crates_cli
+
+[![rust-clippy analyze](https://github.com/willothy/crates_cli/actions/workflows/rust-clippy.yml/badge.svg?branch=main)](https://github.com/willothy/crates_cli/actions/workflows/rust-clippy.yml)
+<br><br>
 A command line interface for finding and managing Rust crates.
 
 Heavily inspired by cargo-edit.
