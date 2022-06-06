@@ -34,14 +34,14 @@ pub fn show(name: &str) -> Result<(), Box<dyn std::error::Error>> {
         &found_crate
             .crate_data
             .description
-            .unwrap_or("No description provided".to_owned()),
+            .unwrap_or_else(|| "No description provided".to_owned()),
     ]));
     table.add_row(table::row(&[
         "Homepage",
         &found_crate
             .crate_data
             .homepage
-            .unwrap_or("No homepage provided".to_owned()),
+            .unwrap_or_else(|| "No homepage provided".to_owned()),
     ]));
     table.add_row(table::row(&[
         "Docs",

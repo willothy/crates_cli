@@ -31,7 +31,7 @@ pub mod error {
         fn not_poison(self) -> Result<MutexGuard<'a, Vec<T>>, Box<dyn Error>> {
             match self {
                 Ok(v) => Ok(v),
-                Err(e) => return Err(e.to_string().into()),
+                Err(e) => Err(e.to_string().into()),
             }
         }
     }

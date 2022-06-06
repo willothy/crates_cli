@@ -11,7 +11,7 @@ fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     let mut buffer: Vec<u8> = Default::default();
     man.render(&mut buffer)?;
 
-    let out_dir = std::path::PathBuf::from(std::env::current_dir()?.join("man"));
+    let out_dir = std::env::current_dir()?.join("man");
 
     if write {
         std::fs::write(
