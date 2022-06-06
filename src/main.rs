@@ -1,16 +1,18 @@
-use clap::*;
+
+
 use std::process::ExitCode;
 
 mod cli;
 mod commands;
 mod util;
 
+/// Creates a new `App` instance, configures it, and then executes it
+///
+/// Returns:
+///
+/// The exit code of the program.
 fn main() -> ExitCode {
-    let app = cli::setup()
-        .bin_name("cargo")
-        .version(crate_version!())
-        .author(crate_authors!(",\n"))
-        .about(crate_description!());
+    let app = cli::setup();
 
     match cli::execute(app) {
         Ok(()) => ExitCode::SUCCESS,

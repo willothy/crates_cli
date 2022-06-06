@@ -82,6 +82,7 @@ pub fn setup<'a>() -> Command<'a> {
                 ),
         ]);
     Command::new("cargo")
+        .bin_name("cargo")
         .subcommand_required(true)
         .arg_required_else_help(true)
         // This arg doesn't do anything in crates_cli
