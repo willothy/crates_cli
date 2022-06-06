@@ -1,9 +1,13 @@
 use clap::*;
-use std::error::Error;
+use flate2;
+
+use std::{error::Error, io::Write};
+
 #[path = "src/cli/setup.rs"]
 mod cli;
 
 fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
+    use std::path::PathBuf;
     let write = parent.is_some();
     let parent = parent.unwrap_or("");
 
@@ -11,12 +15,25 @@ fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     let mut buffer: Vec<u8> = Default::default();
     man.render(&mut buffer)?;
 
-    let out_dir = std::env::current_dir()?.join("man");
+    let out_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR")?).join("man");
+    let out_file = out_dir.join(parent.to_owned() + "-" + cmd.get_name() + ".1.gz");
+    println!("out dir: {}", out_dir.to_str().unwrap_or(""));
 
     if write {
-        std::fs::write(
-            out_dir.join(parent.to_owned() + "-" + cmd.get_name() + ".1"),
-            buffer,
+        use std::fs;
+        if !out_dir.exists() {
+            fs::create_dir_all(&out_dir)?;
+        }
+
+        let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+        encoder.write_all(&buffer)?;
+        fs::write(
+            &out_file,
+            encoder.finish()?,
+        )?;
+        fs::copy(
+            out_file,
+            PathBuf::from("/usr/share/man/man1/").join(out_file
         )?;
     }
 

@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Will Hopkins <willothyh@gmail.com>"]
 description = "A command line interface for finding and managing crates."
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/willothy/crates_cli"
+keywords = ["crates", "crates.io", "cli", "search"]
+categories = ["command-line-utilities"]
 
 [[bin]]
 name = "cargo-crate"
@@ -12,6 +17,7 @@ path = "src/main.rs"
 [build-dependencies]
 clap_mangen = "0.1"
 clap = { version = "3.1.18", features = ["cargo"] }
+flate2 = "1.0.24"
 
 [dependencies]
 clap = { version = "3.1.18", features = ["cargo", "wrap_help", "env"] }
