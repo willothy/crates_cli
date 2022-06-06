@@ -1,5 +1,4 @@
 use clap::*;
-use cli::CliExecute;
 use std::process::ExitCode;
 
 mod cli;
@@ -8,13 +7,12 @@ mod util;
 
 fn main() -> ExitCode {
     let app = cli::setup()
-        .bin_name("crates_cli")
+        .bin_name("cargo")
         .version(crate_version!())
         .author(crate_authors!(",\n"))
-        .about(crate_description!())
-        .name(crate_name!());
+        .about(crate_description!());
 
-    match app.execute() {
+    match cli::execute(app) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("{}", e);

@@ -7,7 +7,7 @@ pub mod crates {
     use crates_io_api::SyncClient;
 
     pub fn get_client() -> Result<SyncClient, String> {
-        match SyncClient::new("crates_cli", std::time::Duration::from_millis(1000)) {
+        match SyncClient::new(&("crates_cli".to_owned() + clap::crate_authors!(" ")), std::time::Duration::from_millis(1000)) {
             Ok(client) => Ok(client),
             Err(e) => Err(e.to_string()),
         }

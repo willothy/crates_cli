@@ -1,18 +1,20 @@
-use std::{env, error::Error};
+use clap::{arg, crate_authors, crate_description, crate_version, Command};
 
-use clap::{self, arg, crate_authors, crate_version, Command};
+const TY_MSG: &str = "Thank you for using crates_cli!";
 
 pub fn setup<'a>() -> Command<'a> {
     let crates = Command::new("crate")
-        .bin_name("")
         .version(crate_version!())
+        .propagate_version(true)
         .author(crate_authors!(",\n"))
+        .about(crate_description!())
         .subcommand_required(true)
-        .after_long_help("")
+        .after_long_help(TY_MSG)
         .arg_required_else_help(true)
         .subcommands(vec![
             Command::new("find")
-                .after_long_help("")
+                .author(crate_authors!(",\n"))
+                .after_long_help(TY_MSG)
                 .display_order(0)
                 .about("Search for crates on crates.io.")
                 .arg(
@@ -67,7 +69,8 @@ pub fn setup<'a>() -> Command<'a> {
                         .conflicts_with("max_results"),
                 ),
             Command::new("show")
-                .after_long_help("")
+                .author(crate_authors!(",\n"))
+                .after_long_help(TY_MSG)
                 .display_order(0)
                 .about("Display metadata about a crate.")
                 .arg_required_else_help(true)
@@ -79,39 +82,14 @@ pub fn setup<'a>() -> Command<'a> {
                 ),
         ]);
     Command::new("cargo")
-        .propagate_version(true)
         .subcommand_required(true)
         .arg_required_else_help(true)
+        // This arg doesn't do anything in crates_cli
+        // I added it so that it'll show on the manpage if cargo-crates is run as as a freestanding binary and not a subcommand of cargo.
+        .arg(
+            arg!(--list)
+            .required(false)
+            .help("List all cargo subcommands"),
+        )
         .subcommand(crates)
-}
-
-pub trait CliExecute<'a> {
-    fn execute(self) -> Result<(), Box<dyn Error>>;
-}
-
-impl<'a> CliExecute<'a> for Command<'a> {
-    fn execute(self) -> Result<(), Box<dyn Error>> {
-        let command = match self.get_matches().subcommand() {
-            Some(("crate", subcommand)) => subcommand.clone(),
-            _ => return Err("Expected 'crates'".into()),
-        };
-        match command.subcommand() {
-            Some(("find", args)) => crate::commands::find(
-                args.value_of("name").unwrap(),
-                args.value_of("sort").unwrap(),
-                if args.is_present("all") {
-                    None
-                } else {
-                    Some(args.value_of_t::<usize>("max_results").unwrap_or(3))
-                },
-                args.is_present("filter"),
-            ),
-            Some(("show", args)) => crate::commands::show(match args.value_of("name") {
-                Some(name) => name,
-                None => return Err("No name given".into()),
-            }),
-            Some((unknown_cmd, _)) => Err(format!("Unknown command: {}", unknown_cmd).into()),
-            None => Err("No command specified.".into()),
-        }
-    }
 }
