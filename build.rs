@@ -1,8 +1,24 @@
 use clap::*;
+use std::error::Error;
 
-fn main() -> std::io::Result<()> {
+fn gen_man(cmd: &Command) -> Result<(), Box<dyn Error>> {
+    let man = clap_mangen::Man::new(cmd.clone());
+    let mut buffer: Vec<u8> = Default::default();
+    man.render(&mut buffer)?;
+
+    let out_dir = std::path::PathBuf::from(std::env::current_dir()?.join("man"));
+    let bin_name = cmd.get_bin_name().unwrap_or(cmd.get_name());
+    std::fs::write(out_dir.join(bin_name.to_owned() + ".1"), buffer)?;
+    
+    for subcommand in cmd.get_subcommands() {
+        gen_man(subcommand)?;
+    }
+
+    Ok(())
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
     let crates = Command::new("crate")
-        .bin_name("")
         .version(crate_version!())
         .author(crate_authors!(",\n"))
         .subcommand_required(true)
@@ -76,18 +92,14 @@ fn main() -> std::io::Result<()> {
                         .help("The name of the crate to show."),
                 ),
         ]);
+
     let cmd = Command::new("cargo")
         .propagate_version(true)
         .subcommand_required(true)
         .arg_required_else_help(true)
         .subcommand(crates);
 
-    let man = clap_mangen::Man::new(cmd);
-    let mut buffer: Vec<u8> = Default::default();
-    man.render(&mut buffer)?;
-
-    let out_dir = std::path::PathBuf::from(std::env::current_dir()?);
-    std::fs::write(out_dir.join("mybin.man"), buffer)?;
+    gen_man(&cmd)?;
 
     Ok(())
 }

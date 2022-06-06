@@ -1,0 +1,29 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH find 1  "find " 
+.SH NAME
+find \- Search for crates on crates.io.
+.SH SYNOPSIS
+\fBfind\fR [\fB\-h\fR|\fB\-\-help\fR] [\fB\-m\fR|\fB\-\-max_results\fR] [\fB\-s\fR|\fB\-\-sort\fR] [\fB\-f\fR|\fB\-\-filter\fR] [\fB\-a\fR|\fB\-\-all\fR] <\fIname\fR> 
+.SH DESCRIPTION
+Search for crates on crates.io.
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help information
+.TP
+\fB\-m\fR, \fB\-\-max_results\fR=\fImax_results\fR [default: 4]
+The maximum number of results to display, max. 50.
+.TP
+\fB\-s\fR, \fB\-\-sort\fR=\fIsort\fR [default: recent\-downloads]
+The sort order of the results.
+.TP
+\fB\-f\fR, \fB\-\-filter\fR
+Filter out crates whose titles don\*(Aqt contain the search term.
+.TP
+\fB\-a\fR, \fB\-\-all\fR
+Show all results.
+.TP
+<\fIname\fR>
+The name of the crate to search for.
+.SH EXTRA
