@@ -53,7 +53,7 @@ pub mod loader {
                     sp.stop();
                     Ok(result)
                 }
-                Err(e) => Err(e.to_string()),
+                Err(e) => Err(e),
             },
             Err(_) => Err("Network thread could not rejoin".to_owned()),
         }

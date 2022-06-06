@@ -1,5 +1,5 @@
 use clap::*;
-use flate2;
+use flate2::{write::GzEncoder, Compression};
 
 use std::{error::Error, io::Write};
 
@@ -36,12 +36,9 @@ fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
             fs::create_dir_all(&out_dir)?;
         }
 
-        let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+        let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
         encoder.write_all(&buffer)?;
-        fs::write(
-            &out_file,
-            encoder.finish()?,
-        )?;
+        fs::write(&out_file, encoder.finish()?)?;
     }
 
     for subcommand in cmd.get_subcommands() {
