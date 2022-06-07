@@ -10,6 +10,16 @@ use crate::util::error::NotPoison;
 use crate::util::{crates, loader};
 use crate::util::{table, terminal::RESET};
 
+/// If the sort string is "relevance", return Sort::Relevance, if it's "downloads", return
+/// Sort::Downloads, and so on. If it's none of those, return Sort::RecentDownloads
+///
+/// Arguments:
+///
+/// * `sort`: The sort type.
+///
+/// Returns:
+///
+/// A Sort enum
 fn get_sort_type(sort: &str) -> Sort {
     match sort.trim() {
         "relevance" => Sort::Relevance,
@@ -22,6 +32,8 @@ fn get_sort_type(sort: &str) -> Sort {
     }
 }
 
+/// Search for crates by name, and return a table of the results.
+/// Optionally filter the results before printing
 pub fn find(
     name: &str,
     sort: &str,
@@ -67,8 +79,9 @@ pub fn find(
     table
         .load_preset(UTF8_FULL)
         .apply_modifier(modifiers::UTF8_ROUND_CORNERS)
-        .set_content_arrangement(ContentArrangement::Dynamic)
-        .set_header(table::header(&["Name", "Version", "Description", "Docs"]));
+        .set_content_arrangement(ContentArrangement::Dynamic);
+
+    table::set_header(&mut table, &["Name", "Version", "Description", "Docs"]);
 
     found_crates.sort_by(|_, b| b.name.cmp(&(*name).to_owned()));
     let showing_crates: Vec<&crates_io_api::Crate> = found_crates
@@ -84,15 +97,20 @@ pub fn find(
         if description.len() > 45 {
             description = description.chars().take(42).collect::<String>() + "..."
         }
-        table.add_row(table::row(&[
-            &crate_info.name,
-            &crate_info.max_version,
-            &description,
-            &crate_info
-                .documentation
-                .clone()
-                .unwrap_or_else(|| "No docs available".to_owned()),
-        ]));
+        
+        
+        table::add_row(
+            &mut table,
+            &[
+                &crate_info.name,
+                &crate_info.max_version,
+                &description,
+                &crate_info
+                    .documentation
+                    .clone()
+                    .unwrap_or_else(|| "No docs available".to_owned()),
+            ],
+        );
     });
 
     table
@@ -100,7 +118,7 @@ pub fn find(
         .unwrap()
         .set_constraint(ColumnConstraint::Absolute(Width::Fixed(25)));
     println!(
-        "... Found {0}{1}{RESET}, showing {0}{2}{RESET}",
+        "\rFound {0}{1}{RESET}, showing {0}{2}{RESET}",
         Fg(Cyan),
         found_crates.len(),
         showing_crates.len()
@@ -110,7 +128,7 @@ pub fn find(
         if table.row_iter().count() > 0 {
             table.to_string()
         } else {
-            format!("Sorry, couln't find any crates named {}", name)
+            format!("Sorry, couln't find any crates including {}", name)
         }
     );
     Ok(())

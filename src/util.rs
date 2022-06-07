@@ -1,10 +1,16 @@
 pub mod terminal {
-    use termion::color::{Fg, Reset};
+    //! Terminal utilities
+    use termion::color::{Fg, Reset, LightCyan};
+    use termion::style::Bold;
     pub const RESET: Fg<Reset> = Fg(Reset);
+    pub const PRIMARY: Fg<LightCyan> = Fg(LightCyan);
+    pub const BOLD: Bold = Bold;
+    pub const DEC_RESET: termion::style::Reset = termion::style::Reset;
 }
 
 pub mod crates {
-    use crates_io_api::SyncClient;
+    //! Crates.io API utilities
+    use crates_io_api::{CrateResponse, SyncClient};
 
     pub fn get_client() -> Result<SyncClient, String> {
         match SyncClient::new(
@@ -15,9 +21,17 @@ pub mod crates {
             Err(e) => Err(e.to_string()),
         }
     }
+
+    pub fn get_crate(client: &SyncClient, search_name: String) -> Result<CrateResponse, String> {
+        match client.get_crate(search_name.trim()) {
+            Ok(result) => Ok(result),
+            Err(_) => Err(format!("Sorry, could not find crate {} :(", search_name)),
+        }
+    }
 }
 
 pub mod error {
+    //! Error utilities
     use std::{
         error::Error,
         sync::{LockResult, MutexGuard},
@@ -38,6 +52,7 @@ pub mod error {
 }
 
 pub mod loader {
+    //! Loading utilities
     use std::thread::JoinHandle;
 
     use spinners::{Spinner, Spinners};
@@ -61,10 +76,18 @@ pub mod loader {
 }
 
 pub mod table {
+    //! Table utilities
     use comfy_table::{
         modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL, Cell, ContentArrangement::Dynamic, Table,
     };
 
+    /// `setup()` returns a `Table` object that has been loaded with the `UTF8_FULL` preset, modified
+    /// with the `UTF8_ROUND_CORNERS` modifier, and set to `Dynamic` content arrangement
+    ///
+    /// Returns:
+    ///
+    /// A table with the preset UTF8_FULL, the modifier UTF8_ROUND_CORNERS, and the content arrangement
+    /// Dynamic.
     pub fn setup() -> Table {
         let mut table = Table::new();
         table
@@ -74,7 +97,16 @@ pub mod table {
         table
     }
 
-    pub fn header(headers: &[&str]) -> Vec<Cell> {
+    /// `header` takes a slice of strings and returns a vector of header cells
+    ///
+    /// Arguments:
+    ///
+    /// * `headers`: &[&str]
+    ///
+    /// Returns:
+    ///
+    /// A vector of cells.
+    fn style_header(headers: &[&str]) -> Vec<Cell> {
         use comfy_table::{Attribute, Color};
         let mut cells = Vec::new();
         for header in headers {
@@ -87,12 +119,35 @@ pub mod table {
         cells
     }
 
-    pub fn row(elements: &[&str]) -> Vec<Cell> {
+    /// It takes a slice of strings and returns a vector of row cells
+    ///
+    /// Arguments:
+    ///
+    /// * `elements`: &[&str]
+    ///
+    /// Returns:
+    ///
+    /// A vector of cells.
+    fn style_row(elements: &[&str]) -> Vec<Cell> {
         use comfy_table::Color;
         let mut cells = Vec::new();
         for cell in elements {
             cells.push(Cell::new(cell).fg(Color::White));
         }
         cells
+    }
+
+    pub fn set_header(table: &mut Table, headers: &[&str]) {
+        table.set_header(style_header(headers));
+    }
+
+    pub fn add_rows(table: &mut Table, rows: &[&[&str]]) {
+        for row in rows {
+            table.add_row(style_row(*row));
+        }
+    }
+
+    pub fn add_row(table: &mut Table, row: &[&str]) {
+        table.add_row(style_row(row));
     }
 }

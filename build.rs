@@ -1,16 +1,22 @@
+//! Author: [willothy](https://github.com/willothy)
+//! Date: 6/6/2022
+//! Build script for manpage generation
+
 use clap::*;
 use flate2::{write::GzEncoder, Compression};
 
 use std::{
-    path::PathBuf,
     error::Error,
+    fs::{create_dir_all, write},
     io::Write,
-    fs::{write, create_dir_all}
+    path::PathBuf,
 };
 
 #[path = "src/cli/setup.rs"]
 mod cli;
 
+/// Recursive manpage generation function
+/// Called with None in parent to ignore the "cargo" command and only generate manpages for subcommands present in the crate
 fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     let write_file = parent.is_some();
     let parent = parent.unwrap_or("");
@@ -40,6 +46,8 @@ fn gen_man(cmd: &Command, parent: Option<&str>) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+/// The main function of the build script
+/// Sets up the clap CLI app, then calls gen_man to recursively generate manpages for subcommands
 fn main() -> Result<(), Box<dyn Error>> {
     let cli = cli::setup();
     gen_man(&cli, None)?;
