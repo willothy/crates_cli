@@ -8,7 +8,11 @@ Installation:
 
     cargo install crates_cli
 
+<br>
+Basic Usage:
 
+`cargo crate [SUBCOMMAND] [OPTIONS] <crate>`
+<br>
 
 Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in the wiki for more info on how to use `crates_cli`.
 
