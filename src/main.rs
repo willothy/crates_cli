@@ -101,6 +101,8 @@
 
 use std::process::ExitCode;
 
+use crate::util::terminal;
+
 mod cli;
 mod commands;
 mod util;
@@ -111,7 +113,7 @@ fn main() -> ExitCode {
     match cli::execute(app) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            eprintln!("{}", e);
+            terminal::print_error(format!("\n{}\n\n", e)).unwrap_or(());
             ExitCode::FAILURE
         }
     }

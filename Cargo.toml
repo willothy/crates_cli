@@ -1,6 +1,6 @@
 [package]
 name = "crates_cli"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2021"
 authors = ["Will Hopkins <willothyh@gmail.com>"]
 description = "A command line interface for finding and managing crates."
@@ -26,4 +26,4 @@ comfy-table = "6.0.0"
 crates_io_api = "0.8.0"
 num-format = "0.4.0"
 spinners = "4.0.0"
-termion = "1.5.6"
+crossterm = "0.23.2"

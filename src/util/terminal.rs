@@ -1,7 +1,43 @@
 //! Terminal utilities
-use termion::color::{Fg, LightCyan, Reset};
-use termion::style::Bold;
-pub const RESET: Fg<Reset> = Fg(Reset);
-pub const PRIMARY: Fg<LightCyan> = Fg(LightCyan);
-pub const BOLD: Bold = Bold;
-pub const DEC_RESET: termion::style::Reset = termion::style::Reset;
+use crossterm::{
+    style::{Attribute, ContentStyle, Print, StyledContent, Stylize},
+    QueueableCommand,
+};
+use std::fmt::Display;
+use std::io::{self, stdout, Write};
+
+pub trait CratesCliStyle<T: Stylize + Display> {
+    fn style_primary(self) -> StyledContent<T>;
+    fn style_secondary(self) -> StyledContent<T>;
+}
+
+impl<T: Stylize + Display> CratesCliStyle<T> for T {
+    fn style_primary(self) -> StyledContent<T> {
+        ContentStyle::new()
+            .attribute(Attribute::Bold)
+            .cyan()
+            .apply(self)
+    }
+
+    fn style_secondary(self) -> StyledContent<T> {
+        ContentStyle::new().cyan().apply(self)
+    }
+}
+
+pub fn print_queue<T: Into<String> + Display>(values: Vec<T>, new_line: bool) -> io::Result<()> {
+    let mut stdout = stdout();
+    for val in values {
+        stdout.queue(Print(val.to_string()))?;
+    }
+    if new_line {
+        stdout.queue(Print("\n"))?;
+    }
+    stdout.flush()
+}
+pub fn print<T: Into<String> + Display>(value: T) -> io::Result<()> {
+    stdout().queue(Print(value))?.flush()
+}
+
+pub fn print_error<T: Into<String> + Display>(value: T) -> io::Result<()> {
+    stdout().queue(Print(value.to_string().red()))?.flush()
+}

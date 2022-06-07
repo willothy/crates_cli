@@ -1,6 +1,6 @@
 use crate::util::{
     crates, loader,
-    terminal::{BOLD, DEC_RESET, PRIMARY, RESET},
+    terminal::{self, CratesCliStyle},
 };
 use std::thread;
 
@@ -33,18 +33,25 @@ pub fn run(
         crate_versions.retain(|version| version.num.contains(find));
     }
 
-    println!(
-        "\rFound {PRIMARY}{}{RESET} available versions for {BOLD}{PRIMARY}{}{DEC_RESET}{RESET}, showing {PRIMARY}{}{RESET}",
-        num_versions,
-        found_crate.crate_data.name,
-        crate_versions.len()
-    );
-    crate_versions.iter().for_each(|crate_version| {
-        println!(
-            "- {PRIMARY}{}{RESET} ({})",
-            crate_version.num,
-            crate_version.created_at.date().naive_local()
-        );
-    });
+    terminal::print(format!(
+        "\rFound {} available versions for {}, showing {}\n",
+        num_versions.to_string().style_secondary(),
+        found_crate.crate_data.name.style_primary(),
+        crate_versions.len().to_string().style_secondary()
+    ))?;
+
+    terminal::print_queue(
+        crate_versions
+            .iter()
+            .map(|ver| {
+                format!(
+                    "- {} ({})\n",
+                    ver.num.to_string().style_secondary(),
+                    ver.created_at.date().naive_local()
+                )
+            })
+            .collect(),
+        true,
+    )?;
     Ok(())
 }

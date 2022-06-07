@@ -1,6 +1,6 @@
 use crate::util::{
     crates, loader, table,
-    terminal::{BOLD, DEC_RESET, PRIMARY, RESET},
+    terminal::{self, CratesCliStyle},
 };
 use std::thread;
 
@@ -37,12 +37,12 @@ pub fn run(name: &str) -> Result<(), Box<dyn std::error::Error>> {
             ],
         );
     });
-    println!(
-        "\rFound {PRIMARY}{}{RESET} dependencies for {BOLD}{PRIMARY}{}{DEC_RESET}{RESET} version {PRIMARY}{}{RESET}",
-        crate_dependencies.len(),
-        name,
-        version,
-    );
-    println!("\n{table}");
+    terminal::print(format!(
+        "\rFound {} dependencies for {} version {}\n{}\n\n",
+        crate_dependencies.len().to_string().style_secondary(),
+        name.style_primary(),
+        version.style_secondary(),
+        table
+    ))?;
     Ok(())
 }

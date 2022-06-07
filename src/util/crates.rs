@@ -14,6 +14,6 @@ pub fn get_client() -> Result<SyncClient, String> {
 pub fn get_crate(client: &SyncClient, search_name: String) -> Result<CrateResponse, String> {
     match client.get_crate(search_name.trim()) {
         Ok(result) => Ok(result),
-        Err(_) => Err(format!("Sorry, could not find crate {} :(", search_name)),
+        Err(_) => Err(format!("No crate named {} was found.", search_name)),
     }
 }
