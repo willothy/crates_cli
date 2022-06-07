@@ -1,4 +1,4 @@
-use crate::util::{crates, loader, table};
+use crate::util::{crates, loader, table, terminal};
 use num_format::{Locale, ToFormattedString};
 use std::thread;
 
@@ -61,6 +61,6 @@ pub fn run(name: &str) -> Result<(), Box<dyn std::error::Error>> {
         ],
     );
 
-    println!("\r{table}");
+    terminal::print(format!("\n{}\n\n", table))?;
     Ok(())
 }

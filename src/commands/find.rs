@@ -7,9 +7,9 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::util::error::NotPoison;
-use crate::util::terminal::CratesCliStyle;
-use crate::util::{crates, loader};
 use crate::util::table;
+use crate::util::terminal::{self, CratesCliStyle};
+use crate::util::{crates, loader};
 
 /// If the sort string is "relevance", return Sort::Relevance, if it's "downloads", return
 /// Sort::Downloads, and so on. If it's none of those, return Sort::RecentDownloads
@@ -116,18 +116,16 @@ pub fn run(
         .column_mut(2)
         .unwrap()
         .set_constraint(ColumnConstraint::Absolute(Width::Fixed(25)));
-    println!(
-        "\rFound {}, showing {}",
+
+    terminal::print(format!(
+        "\rFound {}, showing {}\n{}\n\n",
         found_crates.len().to_string().style_secondary(),
-        showing_crates.len().to_string().style_secondary()
-    );
-    println!(
-        "{}",
+        showing_crates.len().to_string().style_secondary(),
         if table.row_iter().count() > 0 {
             table.to_string()
         } else {
-            format!("Sorry, couln't find any crates including {}", name)
+            format!("No crates matching crates found for {}.", name)
         }
-    );
+    ))?;
     Ok(())
 }

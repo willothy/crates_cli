@@ -1,7 +1,4 @@
-use crate::util::{
-    crates, loader, table,
-    terminal::CratesCliStyle,
-};
+use crate::util::{crates, loader, table, terminal::{CratesCliStyle, self}};
 use std::thread;
 
 /// Find crate and show details about it in a table
@@ -37,12 +34,12 @@ pub fn run(name: &str) -> Result<(), Box<dyn std::error::Error>> {
             ],
         );
     });
-    println!(
-        "\rFound {} dependencies for {} version {}",
+    terminal::print(format!(
+        "\rFound {} dependencies for {} version {}\n{}\n\n",
         crate_dependencies.len().to_string().style_secondary(),
         name.style_primary(),
         version.style_secondary(),
-    );
-    println!("\n{table}");
+        table
+    ))?;
     Ok(())
 }
