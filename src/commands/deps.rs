@@ -1,4 +1,7 @@
-use crate::util::{crates, loader, table, terminal::{CratesCliStyle, self}};
+use crate::util::{
+    crates, loader, table,
+    terminal::{self, CratesCliStyle},
+};
 use std::thread;
 
 /// Find crate and show details about it in a table

@@ -1,4 +1,7 @@
-use crate::util::{crates, loader, terminal::{CratesCliStyle, self}};
+use crate::util::{
+    crates, loader,
+    terminal::{self, CratesCliStyle},
+};
 use std::thread;
 
 /// Find crate and list its available versions
@@ -30,21 +33,25 @@ pub fn run(
         crate_versions.retain(|version| version.num.contains(find));
     }
 
-    terminal::print(
-        format!(
-            "\rFound {} available versions for {}, showing {}\n",
-            num_versions.to_string().style_secondary(),
-            found_crate.crate_data.name.style_primary(),
-            crate_versions.len().to_string().style_secondary()
-        )
-    )?;
+    terminal::print(format!(
+        "\rFound {} available versions for {}, showing {}\n",
+        num_versions.to_string().style_secondary(),
+        found_crate.crate_data.name.style_primary(),
+        crate_versions.len().to_string().style_secondary()
+    ))?;
 
-    terminal::print_queue(crate_versions.iter().map(|ver| {
-        format!(
-            "- {} ({})\n",
-            ver.num.to_string().style_secondary(),
-            ver.created_at.date().naive_local()
-        )
-    }).collect(), true)?;
+    terminal::print_queue(
+        crate_versions
+            .iter()
+            .map(|ver| {
+                format!(
+                    "- {} ({})\n",
+                    ver.num.to_string().style_secondary(),
+                    ver.created_at.date().naive_local()
+                )
+            })
+            .collect(),
+        true,
+    )?;
     Ok(())
 }
