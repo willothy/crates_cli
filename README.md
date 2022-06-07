@@ -4,6 +4,12 @@
 <br>A command line interface for finding and managing Rust crates, heavily inspired by cargo-edit.
 
 
+Installation:
+
+    cargo install crates_cli
+
+
+
 Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in the [wiki](https://github.com/willothy/crates_cli/wiki) for more info on how to use `crates_cli`.
 
 ### Features:
