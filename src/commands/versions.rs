@@ -1,4 +1,7 @@
-use crate::util::{crates, loader, terminal::{RESET, PRIMARY, BOLD, DEC_RESET}};
+use crate::util::{
+    crates, loader,
+    terminal::{BOLD, DEC_RESET, PRIMARY, RESET},
+};
 use std::thread;
 
 /// Find crate and list its available versions

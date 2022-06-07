@@ -97,8 +97,7 @@ pub fn find(
         if description.len() > 45 {
             description = description.chars().take(42).collect::<String>() + "..."
         }
-        
-        
+
         table::add_row(
             &mut table,
             &[

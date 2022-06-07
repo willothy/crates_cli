@@ -1,6 +1,6 @@
 pub mod terminal {
     //! Terminal utilities
-    use termion::color::{Fg, Reset, LightCyan};
+    use termion::color::{Fg, LightCyan, Reset};
     use termion::style::Bold;
     pub const RESET: Fg<Reset> = Fg(Reset);
     pub const PRIMARY: Fg<LightCyan> = Fg(LightCyan);

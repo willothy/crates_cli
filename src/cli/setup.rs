@@ -126,7 +126,7 @@ pub fn setup<'a>() -> Command<'a> {
                         .help("The version (or partial version) to search for"),
                 )
                 .arg(
-                    arg!(-o --oldest_first)
+                    arg!(-o - -oldest_first)
                         .required(false)
                         .display_order(3)
                         .help("Show oldest versions first (default: newest)"),
