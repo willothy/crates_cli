@@ -1,6 +1,6 @@
 use crate::util::{
     crates, loader,
-    terminal::{BOLD, DEC_RESET, PRIMARY, RESET},
+    terminal::CratesCliStyle,
 };
 use std::thread;
 
@@ -34,15 +34,15 @@ pub fn run(
     }
 
     println!(
-        "\rFound {PRIMARY}{}{RESET} available versions for {BOLD}{PRIMARY}{}{DEC_RESET}{RESET}, showing {PRIMARY}{}{RESET}",
-        num_versions,
-        found_crate.crate_data.name,
-        crate_versions.len()
+        "\rFound {} available versions for {}, showing {}",
+        num_versions.to_string().style_secondary(),
+        found_crate.crate_data.name.style_primary(),
+        crate_versions.len().to_string().style_secondary()
     );
     crate_versions.iter().for_each(|crate_version| {
         println!(
-            "- {PRIMARY}{}{RESET} ({})",
-            crate_version.num,
+            "- {} ({})",
+            crate_version.num.to_string().style_secondary(),
             crate_version.created_at.date().naive_local()
         );
     });

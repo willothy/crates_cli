@@ -7,8 +7,9 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::util::error::NotPoison;
+use crate::util::terminal::CratesCliStyle;
 use crate::util::{crates, loader};
-use crate::util::{table, terminal::RESET};
+use crate::util::table;
 
 /// If the sort string is "relevance", return Sort::Relevance, if it's "downloads", return
 /// Sort::Downloads, and so on. If it's none of those, return Sort::RecentDownloads
@@ -40,7 +41,6 @@ pub fn run(
     page_size: Option<usize>,
     filter: bool,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    use termion::color::{Cyan, Fg};
     let name = name.to_owned();
     let sort = get_sort_type(sort);
 
@@ -117,10 +117,9 @@ pub fn run(
         .unwrap()
         .set_constraint(ColumnConstraint::Absolute(Width::Fixed(25)));
     println!(
-        "\rFound {0}{1}{RESET}, showing {0}{2}{RESET}",
-        Fg(Cyan),
-        found_crates.len(),
-        showing_crates.len()
+        "\rFound {}, showing {}",
+        found_crates.len().to_string().style_secondary(),
+        showing_crates.len().to_string().style_secondary()
     );
     println!(
         "{}",
