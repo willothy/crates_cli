@@ -109,6 +109,7 @@ mod util;
 
 fn main() -> ExitCode {
     let app = cli::setup();
+    terminal::set_title("Crates CLI");
 
     match cli::execute(app) {
         Ok(()) => ExitCode::SUCCESS,

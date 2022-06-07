@@ -1,7 +1,7 @@
 //! Terminal utilities
 use crossterm::{
     style::{Attribute, ContentStyle, Print, StyledContent, Stylize},
-    QueueableCommand,
+    QueueableCommand, terminal::SetTitle,
 };
 use std::fmt::Display;
 use std::io::{self, stdout, Write};
@@ -34,10 +34,14 @@ pub fn print_queue<T: Into<String> + Display>(values: Vec<T>, new_line: bool) ->
     }
     stdout.flush()
 }
-pub fn print<T: Into<String> + Display>(value: T) -> io::Result<()> {
+pub fn print<T: Into<String> + Display>(value: T) -> Result<(), std::io::Error> {
     stdout().queue(Print(value))?.flush()
 }
 
-pub fn print_error<T: Into<String> + Display>(value: T) -> io::Result<()> {
+pub fn print_error<T: Into<String> + Display>(value: T) -> Result<(), std::io::Error> {
     stdout().queue(Print(value.to_string().red()))?.flush()
+}
+
+pub fn set_title<T: Into<String> + Display>(title: T) {
+    crossterm::execute!(std::io::stdout(), SetTitle(title.to_string())).unwrap_or(());
 }
