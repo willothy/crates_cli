@@ -15,7 +15,7 @@ Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in t
 ### Planned features:
 - `add`, `rm`, and `version` for managing dependencies
 - `feature` and related subcommands for managing features of dependencies
-- `license` retrieve the license of a crate
+- `license` to retrieve the license of a crate
 
 
 ### Collaboration:
