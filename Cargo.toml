@@ -1,6 +1,6 @@
 [package]
 name = "crates_cli"
-version = "0.2.0"
+version = "0.2.2"
 edition = "2021"
 authors = ["Will Hopkins <willothyh@gmail.com>"]
 description = "A command line interface for finding and managing crates."
