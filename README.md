@@ -9,6 +9,8 @@ Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in t
 ### Features:
 - `find` searches crates.io for a crate
 - `show` displays information about a crate, including homepage and documentation links.
+- `deps` displays the dependencies of a crate.
+- `versions` shows available versions for a crate, and allows you to filter
 
 ### Planned features:
 - `add`, `rm`, and `version` for managing dependencies
