@@ -5,7 +5,7 @@ use crate::util::{
 use std::thread;
 
 /// Find crate and list its available versions
-pub fn versions(
+pub fn run(
     name: &str,
     max_results: usize,
     find: Option<&str>,

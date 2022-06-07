@@ -1,3 +1,4 @@
+use crate::commands::*;
 use clap::Command;
 use std::error::Error;
 
@@ -8,7 +9,7 @@ pub fn execute(app: Command) -> Result<(), Box<dyn Error>> {
         _ => return Err("Expected 'crate'".into()),
     };
     match command.subcommand() {
-        Some(("find", args)) => crate::commands::find(
+        Some(("find", args)) => find::run(
             args.value_of("name").unwrap(),
             args.value_of("sort").unwrap(),
             if args.is_present("all") {
@@ -18,11 +19,11 @@ pub fn execute(app: Command) -> Result<(), Box<dyn Error>> {
             },
             args.is_present("filter"),
         ),
-        Some(("show", args)) => crate::commands::show(match args.value_of("name") {
+        Some(("show", args)) => show::run(match args.value_of("name") {
             Some(name) => name,
             None => return Err("No name given".into()),
         }),
-        Some(("versions", args)) => crate::commands::versions(
+        Some(("versions", args)) => versions::run(
             match args.value_of("name") {
                 Some(name) => name,
                 None => return Err("No name given".into()),
@@ -31,7 +32,7 @@ pub fn execute(app: Command) -> Result<(), Box<dyn Error>> {
             args.value_of("filter"),
             args.is_present("oldest_first"),
         ),
-        Some(("deps", args)) => crate::commands::deps(match args.value_of("name") {
+        Some(("deps", args)) => deps::run(match args.value_of("name") {
             Some(name) => name,
             None => return Err("No name given".into()),
         }),

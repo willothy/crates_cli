@@ -34,7 +34,7 @@ fn get_sort_type(sort: &str) -> Sort {
 
 /// Search for crates by name, and return a table of the results.
 /// Optionally filter the results before printing
-pub fn find(
+pub fn run(
     name: &str,
     sort: &str,
     page_size: Option<usize>,

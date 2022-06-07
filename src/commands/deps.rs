@@ -5,7 +5,7 @@ use crate::util::{
 use std::thread;
 
 /// Find crate and show details about it in a table
-pub fn deps(name: &str) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run(name: &str) -> Result<(), Box<dyn std::error::Error>> {
     let search_name = name.to_owned();
     let handle = thread::spawn(move || {
         // Instantiate the client.
