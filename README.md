@@ -7,7 +7,7 @@ A command line interface for finding and managing Rust crates, heavily inspired 
 <br>
 
 What's new (v0.2.2):
-- Windows support! The project has now switched to crossterm, which should allow it to function as on Windows.
+- Windows support! The project has now switched to crossterm, which should allow it to function on Windows.
 
 <br>
 
