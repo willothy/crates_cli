@@ -29,7 +29,7 @@ Check the [`Usage`](https://github.com/willothy/crates_cli/wiki/Usage) page in t
 
 
 ### Collaboration:
-Collaboration is welcome, both in the form of issues/ideas and pull requests! I'm still learning rust so feedback would be appreciated.
+Collaboration is welcome. Feel free to submit issues and pull requests!
 
 ### Formatting
 This project uses `rustfmt` for formatting, and `clippy` for linting.
